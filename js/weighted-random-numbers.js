@@ -12,6 +12,7 @@ var random_graph_generation_timeout;
 var predefined_graph_distribution;
 var predefined_graph_distribution_max;
 var predefined_graph_function;
+var predefined_graph_generation_iteration;
 
 var buckets;
 var number_of_buckets = 200;
@@ -27,7 +28,7 @@ $(document).ready(
 		$( '#random-button' ).click(
 			function()
 			{
-				begin_generating_graphs( Math.random, predefined_function_random );
+				begin_generating_graphs( random_function_random, predefined_function_random );
 			}
 		);
 		$( '#karl-button' ).click(
@@ -67,9 +68,65 @@ $(document).ready(
 function begin_generating_graphs( random_function, predefined_function )
 {
 	random_graph_function = random_function;
+	predefined_graph_function = predefined_function;
 	generate_predefined_graph();
 	generate_random_graph();
 }
+
+/* ---------- Predefined ---------- */
+
+function generate_predefined_graph()
+{
+	predefined_graph_distribution = new Array;
+	for ( i = 0; i < 100; i++ )
+	{
+		predefined_graph_distribution[ i ] = 0;
+	}
+	predefined_graph_distribution_max = 0;
+	predefined_graph_iterations();
+	draw_predefined_graph_distribution();
+}
+
+function predefined_graph_iterations()
+{
+	for ( var i = 0; i < 100; i++ )
+	{
+		predefined_graph_generation_iteration = i;
+		var weighted_faux_random_number = get_weighted_predefined_number();
+		add_to_predefined_graph_distribution( weighted_faux_random_number );
+	}
+}
+
+function get_weighted_predefined_number()
+{
+	return predefined_graph_function();
+}
+
+function add_to_predefined_graph_distribution( faux_random_number )
+{
+	predefined_graph_distribution_index = Math.floor( faux_random_number * 100 );
+	predefined_graph_distribution[ predefined_graph_distribution_index ]++;
+	if ( predefined_graph_distribution[ predefined_graph_distribution_index ] > predefined_graph_distribution_max )
+	{
+		predefined_graph_distribution_max = predefined_graph_distribution[ predefined_graph_distribution_index ];
+	}
+}
+
+function draw_predefined_graph_distribution()
+{
+	for ( var i = 0; i < predefined_graph_distribution.length; i++ )
+	{
+		var predefined_graph_row_width_percent = Math.floor(
+			predefined_graph_distribution[ i ] / predefined_graph_distribution_max * 100
+		);
+		
+		document.getElementById( 'predefined-graph-row-' + i ).style.width = predefined_graph_row_width_percent + '%';
+	}
+}
+
+/* ---------- End Predefined ---------- */
+
+/* ---------- Random ---------- */
 
 function generate_random_graph()
 {
@@ -128,57 +185,93 @@ function draw_random_graph_distribution()
 	}
 }
 
-function generate_predefined_graph()
-{
-	predefined_graph_distribution = new Array;
-	for ( i = 0; i < 100; i++ )
-	{
-		predefined_graph_distribution[ i ] = 0;
-	}
-	predefined_graph_distribution_max = 0;
-	predefined_graph_iterations();
-}
-
-function predefined_graph_iterations()
-{
-	for ( var i = 0; i < 100; i++ )
-	{
-		var faux_random_number = i / 100;
-		var decimal_number_to_add = get_weighted_predefined_number();
-		//add_to_predefined_graph_distribution( decimal_number_to_add );
-	}
-}
-
-function predefined_graph_iteration()
-{
-	
-}
-
-function get_weighted_predefined_number()
-{
-	return 0.25;
-}
+/* ---------- End Random ---------- */
 
 /* -------------------- End Graphing -------------------- */
 
 
+/* -------------------- Predefined Functions -------------------- */
+
+function predefined_function_random()
+{
+	return predefined_graph_generation_iteration / 100;
+}
+
+function predefined_function_karl()
+{
+	var first_random_number = predefined_graph_generation_iteration / 100;
+	var second_random_number = ( 100 - predefined_graph_generation_iteration - 1 ) / 100;
+	return technique_karl( first_random_number, second_random_number );
+}
+
+function predefined_function_x_squared()
+{
+	return technique_x_squared( predefined_graph_generation_iteration / 100 );
+}
+
+function predefined_function_x_tesseracted()
+{
+	return technique_x_tesseracted( predefined_graph_generation_iteration / 100 );
+}
+
+function predefined_function_buckets()
+{
+	return technique_buckets( ( predefined_graph_generation_iteration / 100 ) * buckets[ number_of_buckets - 1 ] );
+}
+
+/* -------------------- End Predefined Functions -------------------- */
+
+
 /* -------------------- Random Functions -------------------- */
+
+function random_function_random()
+{
+	return Math.random();
+}
 
 function random_function_karl()
 {
-	var first_random_number = Math.random();
-	var second_random_number = Math.random() * first_random_number;
-	return first_random_number - second_random_number;
+	return technique_karl( Math.random(), Math.random() );
 }
 
 function random_function_x_squared()
 {
-	return Math.pow( Math.random(), 2 );
+	return technique_x_squared( Math.random() );
 }
 
 function random_function_x_tesseracted()
 {
 	return Math.pow( Math.random(), 4 );
+}
+
+function random_function_buckets()
+{
+	return technique_buckets( Math.random() * buckets[ number_of_buckets - 1 ] );
+}
+
+/* -------------------- End Random Functions -------------------- */
+
+
+/* -------------------- Techniques -------------------- */
+
+function technique_random( random_number )
+{
+	return random_number;
+}
+
+function technique_karl( first_random_number, second_random_number )
+{
+	return first_random_number - ( second_random_number * first_random_number );
+}
+
+function technique_x_squared( random_number )
+{
+	return Math.pow( random_number, 2 );
+}
+
+function technique_x_tesseracted( random_number )
+{
+	return Math.pow( random_number, 4 );
 }
 
 function initialize_buckets()
@@ -192,9 +285,8 @@ function initialize_buckets()
 	}
 }
 
-function random_function_buckets()
+function technique_buckets( random_number )
 {
-	var random_number = Math.random() * buckets[ number_of_buckets - 1 ];
 	for ( var current_bucket_index = 0; current_bucket_index < buckets.length; current_bucket_index++ )
 	{
 		if ( random_number <= buckets[ current_bucket_index ] )
@@ -204,37 +296,7 @@ function random_function_buckets()
 	}
 }
 
-/* -------------------- End Random Functions -------------------- */
-
-
-/* -------------------- Predefined Functions -------------------- */
-
-function predefined_function_random()
-{
-	
-}
-
-function predefined_function_karl()
-{
-	
-}
-
-function predefined_function_x_squared()
-{
-	
-}
-
-function predefined_function_x_tesseracted()
-{
-	
-}
-
-function predefined_function_buckets()
-{
-	
-}
-
-/* -------------------- End Predefined Functions -------------------- */
+/* -------------------- End Techniques -------------------- */
 
 
 /* -------------------- Misc -------------------- */
