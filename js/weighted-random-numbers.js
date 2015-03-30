@@ -6,10 +6,11 @@ var random_graph_generation_iteration;
 var random_graph_generation_delay = 1;
 
 var random_graph_timeout;
-var weighted_rand_function;
+var random_graph_function;
 
 var predefined_graph_distribution;
 var predefined_graph_distribution_max;
+var predefined_graph_function;
 
 $(document).ready(
 	function() {
@@ -46,9 +47,9 @@ $(document).ready(
 	}
 );
 
-function begin_generating_graphs( weighted_function )
+function begin_generating_graphs( random_function, predefined_function )
 {
-	weighted_rand_function = weighted_function;
+	random_graph_function = random_function;
 	generate_predefined_graph();
 	generate_random_graph();
 }
@@ -80,12 +81,12 @@ function random_graph_iteration()
 	
 	draw_random_graph_distribution();
 	
-	random_graph_timeout = setTimeout( 'generate_graph();', random_graph_generation_delay );
+	random_graph_timeout = setTimeout( 'random_graph_iteration();', random_graph_generation_delay );
 }
 
 function get_weighted_random_number()
 {
-	return weighted_rand_function();
+	return random_graph_function();
 }
 
 function add_to_random_graph_distribution( decimal_number_to_add )
@@ -126,13 +127,18 @@ function predefined_graph_iterations()
 	{
 		var faux_random_number = i / 100;
 		var decimal_number_to_add = get_weighted_predefined_number();
-		add_to_random_graph_distribution( decimal_number_to_add );
+		//add_to_predefined_graph_distribution( decimal_number_to_add );
 	}
 }
 
 function predefined_graph_iteration()
 {
 	
+}
+
+function get_weighted_predefined_number()
+{
+	return 0.25;
 }
 
 function random_function_karl()
@@ -157,6 +163,25 @@ function random_function_x_minus_x_squared()
 	var random_number = Math.random();
 	return random_number - ( random_number * random_number );
 }
+
+function predefined_function_karl()
+{
+	
+}
+
+function predefined_function_x_squared()
+{
+}
+
+function predefined_function_x_tesseracted()
+{
+}
+
+function predefined_function_x_minus_x_squared()
+{
+}
+
+
 
 
 
