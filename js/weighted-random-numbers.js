@@ -12,6 +12,8 @@ var random_graph_generation_timeout;
 var predefined_graph_distribution;
 var predefined_graph_distribution_max;
 var predefined_graph_function;
+
+var predefined_graph_generation_iterations_limit = 100;
 var predefined_graph_generation_iteration;
 
 var buckets;
@@ -78,7 +80,7 @@ function begin_generating_graphs( random_function, predefined_function )
 function generate_predefined_graph()
 {
 	predefined_graph_distribution = new Array;
-	for ( i = 0; i < 100; i++ )
+	for ( i = 0; i < predefined_graph_generation_iterations_limit; i++ )
 	{
 		predefined_graph_distribution[ i ] = 0;
 	}
@@ -89,9 +91,11 @@ function generate_predefined_graph()
 
 function predefined_graph_iterations()
 {
-	for ( var i = 0; i < 100; i++ )
-	{
-		predefined_graph_generation_iteration = i;
+	for (
+		predefined_graph_generation_iteration = 0;
+		predefined_graph_generation_iteration < predefined_graph_generation_iterations_limit;
+		predefined_graph_generation_iteration++
+	) {
 		var weighted_faux_random_number = get_weighted_predefined_number();
 		add_to_predefined_graph_distribution( weighted_faux_random_number );
 	}
@@ -104,7 +108,7 @@ function get_weighted_predefined_number()
 
 function add_to_predefined_graph_distribution( faux_random_number )
 {
-	predefined_graph_distribution_index = Math.floor( faux_random_number * 100 );
+	predefined_graph_distribution_index = Math.floor( faux_random_number * predefined_graph_generation_iterations_limit );
 	predefined_graph_distribution[ predefined_graph_distribution_index ]++;
 	if ( predefined_graph_distribution[ predefined_graph_distribution_index ] > predefined_graph_distribution_max )
 	{
@@ -117,7 +121,7 @@ function draw_predefined_graph_distribution()
 	for ( var i = 0; i < predefined_graph_distribution.length; i++ )
 	{
 		var predefined_graph_row_width_percent = Math.floor(
-			predefined_graph_distribution[ i ] / predefined_graph_distribution_max * 100
+			predefined_graph_distribution[ i ] / predefined_graph_distribution_max * predefined_graph_generation_iteration
 		);
 		
 		document.getElementById( 'predefined-graph-row-' + i ).style.width = predefined_graph_row_width_percent + '%';
