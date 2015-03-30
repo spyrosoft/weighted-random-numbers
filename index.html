@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Weighted Random Numbers</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link href="./css/normalize.min.css" rel="stylesheet" type="text/css" />
+	<link href="./css/foundation.min.css" rel="stylesheet" type="text/css" />
+	<script src="./js/jquery.min.js"></script>
+	<script src="./js/foundation.min.js"></script>
+	<link href="./css/styles.css" rel="stylesheet" type="text/css" />
+	<script src="./js/weighted-random-numbers.js"></script>
+</head>
+<body>
+	<div class="content">
+		<div class="row">
+			<div class="columns">
+				<h1>Weighted Random Numbers</h1>
+			</div>
+			<div class="columns">
+				<button id="random-button">Random</button>
+				<button id="karl-button">a-(a*b)</button>
+				<button id="x-squared-button">x<sup>2</sup></button>
+				<button id="x-tesseracted-button">x<sup>4</sup></button>
+				<button id="x-minus-x-squared-button">x - (x<sup>2</sup>)</button>
+			</div>
+			<div class="columns">
+				<h2>Random</h2>
+				<script>
+					create_graph_divs( 'random-' );
+				</script>
+			</div>
+			<div class="columns">
+				<h2>Predefined</h2>
+				<script>
+					create_graph_divs( 'predefined-' );
+				</script>
+			</div>
+		</div>
+	</div>
+	<script>$(document).foundation();</script>
+</body>
+</html>
