@@ -1,5 +1,9 @@
+.graph {
+	border: 4px solid #000000;
+}
+
 .graph-row {
 	height: 4px;
-	width: 100%;
+	width: 0%;
 	background-color: #000000;
 }
