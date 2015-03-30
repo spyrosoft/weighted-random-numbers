@@ -1,0 +1,7 @@
+* Todo
+
+** Find a way to pass numbers to the weight functions in order to condense the random and predefined functions together
+
+
+* Done
+
