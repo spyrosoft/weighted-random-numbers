@@ -1,7 +1,7 @@
 var random_graph_distribution;
 var random_graph_distribution_max;
 
-var random_graph_generation_iterations_limit = 10000;
+var random_graph_generation_iterations_limit = 100;
 var random_graph_generation_iteration;
 var random_graph_generation_delay = 1;
 
@@ -11,6 +11,9 @@ var random_graph_function;
 var predefined_graph_distribution;
 var predefined_graph_distribution_max;
 var predefined_graph_function;
+
+var buckets;
+var number_of_buckets = 10;
 
 $(document).ready(
 	function() {
@@ -44,6 +47,14 @@ $(document).ready(
 				begin_generating_graphs( random_function_x_minus_x_squared, predefined_function_x_minus_x_squared );
 			}
 		);
+		$( '#buckets-button' ).click(
+			function()
+			{
+				begin_generating_graphs( random_function_buckets, predefined_function_buckets );
+			}
+		);
+		
+		initialize_buckets();
 	}
 );
 
@@ -164,6 +175,32 @@ function random_function_x_minus_x_squared()
 	return random_number - ( random_number * random_number );
 }
 
+function initialize_buckets()
+{
+	buckets = new Array;
+	var current_buckets_total = 0;
+	for ( i = 0; i <= number_of_buckets; i++ ) {
+		current_buckets_total += i;
+		buckets[ i ] = current_buckets_total;
+	}
+}
+
+function random_function_buckets()
+{
+	var random_number = Math.floor( Math.random() * buckets[ buckets.length - 1 ] );
+	for ( var current_bucket_index = 0; current_bucket_index < buckets.length; current_bucket_index++ )
+	{
+		console.log( current_bucket_index < buckets.length - 1 )
+		console.log( random_number )
+		if (
+			! ( current_bucket_index < buckets.length - 1
+				&& random_number < buckets[ current_bucket_index + 1 ] )
+		) {
+			return current_bucket_index + 1 / number_of_buckets;
+		}
+	}
+}
+
 function predefined_function_karl()
 {
 	
@@ -171,14 +208,22 @@ function predefined_function_karl()
 
 function predefined_function_x_squared()
 {
+	
 }
 
 function predefined_function_x_tesseracted()
 {
+	
 }
 
 function predefined_function_x_minus_x_squared()
 {
+	
+}
+
+function predefined_function_buckets()
+{
+	
 }
 
 
